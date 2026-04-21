@@ -5,4 +5,4 @@
 * On SSD's, you have to overwrite the entire drive
 
 ###### Todo:
-* Add code to verify the following: can we write (permissions)?
+* Add code to verify the following: can we write? (permissions)
