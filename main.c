@@ -1,42 +1,58 @@
 #include "core.h"
+#include <stdio.h>
 
-int main(int argc, char* argv[])
+int main()
 {
-    for (int i = 1; i < argc; i++)
-    {
-        char * filename = argv[i];
-        
-        printf("Accessing '%s'\n", filename);
-        int is_exists = Exists(filename);
-        if (is_exists == 0)
-        {
-            printf("Unable to access '%s'\n", filename);
-            return 0;
-        }
-        
-        printf("Overwriting '%s'\n", filename);
-        int is_overwrite = Overwrite(filename);
-        if (is_overwrite == -1)
-        {
-            printf("Unable to overwrite '%s'\n", filename);
-            return 0;
-        }
+    FILE * file = fopen("output.bmp", "rb");
+    if (!file)
+        return 1;
 
-        printf("Verifying '%s'\n", filename);
-        int is_valid = Verify(filename);
-        if (is_valid == 0)
-        {
-            printf("%s\n", "Failed");
-        }
-        else if (is_valid == 1)
-        {
-            printf("%s\n", "Success");
-        }
-        else
-        {
-            printf("Unable to verify '%s'\n", filename);
-            return 0;
-        }
+    // go to end to measure size
+    fseek(file, 0, SEEK_END);
+    long size = ftell(file);
+    rewind(file);
+
+    // allocate buffer
+    unsigned char * buffer = malloc(size);
+    if (!buffer)
+    {
+        fclose(file);
+        return 1;
     }
+
+    // read entire file
+    size_t read = fread(buffer, 1, size, file);
+    fclose(file);
+
+    Image img = BMP(buffer);
+
+    printf("Width: %d\n", img.width);
+    printf("Height: %d\n", img.height);
+
+    for (int y = 0; y < img.height; y++) {
+        for (int x = 0; x < img.width; x++) {
+            printf("(%d,%d,%d) ",
+                img.pixels[y][x][0],
+                img.pixels[y][x][1],
+                img.pixels[y][x][2]);
+        }
+        printf("\n");
+    }
+
+    for (int y = 0; y < img.height; y++) {
+        for (int x = 0; x < img.width; x++) {
+            free(img.pixels[y][x]);
+        }
+        free(img.pixels[y]);
+    }
+    free(img.pixels);
+
+    if (read != size)
+    {
+        free(buffer);
+        return 1;
+    }
+
+    free(buffer);
     return 0;
 }

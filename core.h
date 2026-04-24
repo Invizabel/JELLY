@@ -1,59 +1,48 @@
-#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-int Exists(char * filename)
-{
-    FILE * file = fopen(filename, "rb");
-    if (!file)
-    {
-        return 0;
-    }
-    fclose(file);
-    return 1;
-}
+typedef struct {
+    int width;
+    int height;
+    int *** pixels;
+} Image;
 
-int Overwrite(char * filename)
+Image BMP(unsigned char * data)
 {
-    unsigned char buffer = 0;
-    FILE * file = fopen(filename, "rb");
-    if (!file)
-    {
-        return -1;
-    }
-    fseek(file, 0, SEEK_END);
-    long idx = ftell(file);
-    fclose(file);
-    file = fopen(filename, "wb");
-    if (!file)
-    {
-        return -1;
-    }
-    for (long i = 0; i < idx; i++)
-    {
-        fwrite(&buffer, 1, 1, file);
-    }
-    fclose(file);
-    return 0;
-}
+    Image img;
 
-int Verify(char * filename)
-{
-    unsigned char buffer[1];
-    long idx = 0;
-    FILE * file = fopen(filename, "rb");
-    if (!file)
+    int pixel_offset;
+
+    memcpy(&pixel_offset, data + 10, 4);
+    memcpy(&img.width,    data + 18, 4);
+    memcpy(&img.height,   data + 22, 4);
+
+    int row_size = (img.width * 3 + 3) & ~3;
+
+    img.pixels = malloc(img.height * sizeof(int**));
+
+    for (int y = 0; y < img.height; y++)
     {
-        return -1;
-    }
-    while (getc(file) != EOF)
-    {
-        fseek(file, idx, SEEK_SET);
-        fread(buffer,1,1,file);
-        if (buffer[0] != 0)
+        img.pixels[y] = malloc(img.width * sizeof(int*));
+
+        int row_start = pixel_offset + (img.height - 1 - y) * row_size;
+
+        for (int x = 0; x < img.width; x++)
         {
-            return 0;
+            img.pixels[y][x] = malloc(3 * sizeof(int));
+
+            int i = row_start + x * 3;
+
+            int r = data[i + 2];
+            int g = data[i + 1]; 
+            int b = data[i];
+            int gray = (r + g + b) / 3;
+            int bw = (gray > 128) ? 255 : 0;
+            img.pixels[y][x][0] = bw;
+            img.pixels[y][x][1] = bw;
+            img.pixels[y][x][2] = bw;
         }
-        idx += 1;
     }
-    fclose(file);
-    return 1;
+
+    return img;
 }
