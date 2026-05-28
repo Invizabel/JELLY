@@ -88,7 +88,26 @@ void draw_mini_map(Canvas* canvas)
     canvas_draw_line(canvas, 8, 56, 120, 56);
 
     // Draw mini map (maze)
+    // 34 Lines total
+    
+    // Line 1
     canvas_draw_line(canvas, 16, 16, 24, 16);
+    // Line 2
+    canvas_draw_line(canvas, 8, 24, 16, 24);
+    // Line 3
+    canvas_draw_line(canvas, 16, 32, 24, 32);
+    // Line 4
+    canvas_draw_line(canvas, 8, 40, 16, 40);
+    // Line 5
+    canvas_draw_line(canvas, 16, 40, 24, 40);
+    // Line 6
+    canvas_draw_line(canvas, 24, 24, 32, 24);
+    // Line 7
+    canvas_draw_line(canvas, 32, 16, 32, 24);
+    // Line 8
+    canvas_draw_line(canvas, 24, 40, 32, 40);
+    // Line 9
+    canvas_draw_line(canvas, 32, 40, 32, 48);
 }
 
 static void input_callback(InputEvent* event, void* context)
