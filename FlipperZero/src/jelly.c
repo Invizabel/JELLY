@@ -1,6 +1,5 @@
 #include "dolphin/dolphin.h"
 #include <furi.h>
-#include <furi_hal_rtc.h>
 #include <gui/gui.h>
 #include <stdlib.h>
 
@@ -140,6 +139,24 @@ void draw_mini_map(Canvas* canvas)
     canvas_draw_line(canvas, 80, 40, 80, 48);
     // Line 25
     canvas_draw_line(canvas, 80, 32, 96, 32);
+    // Line 26
+    canvas_draw_line(canvas, 96, 24, 104, 24);
+    // Line 27
+    canvas_draw_line(canvas, 96, 40, 104, 40);
+    // Line 28
+    canvas_draw_line(canvas, 96, 16, 96, 24);
+    // Line 29
+    canvas_draw_line(canvas, 96, 40, 96, 48);
+    // Line 30
+    canvas_draw_line(canvas, 104, 16, 112, 16);
+    // Line 31
+    canvas_draw_line(canvas, 104, 32, 112, 32);
+    // Line 32
+    canvas_draw_line(canvas, 104, 48, 112, 48);
+    // Line 33
+    canvas_draw_line(canvas, 112, 24, 120, 24);
+    // Line 34
+    canvas_draw_line(canvas, 112, 40, 120, 40);
 }
 
 static void input_callback(InputEvent* event, void* context)
