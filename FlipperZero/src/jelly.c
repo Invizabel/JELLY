@@ -10,15 +10,17 @@ char score_str[16];
 int snacks[13][5];
 bool moving_right = false;
 bool moving_left = false;
+bool moving_up = false;
+bool moving_down = false;
 
 int jellyfish_x_y[][2] = {{60,54},{60,54},{60,54},{60,54}};
 
-int player_x = 6;
-int player_y = 4;
+int player_x = 8;
+int player_y = 5;
 
-// coordinates for drawing
+// Coordinates for drawing
 int jellyfish[][2] = {{3,2},{4,2},{5,2},{6,2},{7,2},{8,2},{2,3},{9,3},{2,4},{9,4},{3,5},{4,5},{5,5},{6,5},{7,5},{8,5},{3,6},{6,6},{8,6},{4,7},{6,7},{9,7},{2,8},{4,8},{7,8},{3,9}};
-int players[][2] = {{7,4},{8,4},{3,5},{4,5},{6,5},{9,5},{3,6},{5,6},{10,6},{3,7},{5,7},{10,7},{3,8},{4,8},{6,8},{9,8},{7,9},{8,9}};
+int player[][2] = {{7,4},{8,4},{3,5},{4,5},{6,5},{9,5},{3,6},{5,6},{10,6},{3,7},{5,7},{10,7},{3,8},{4,8},{6,8},{9,8},{7,9},{8,9}};
 
 
 void collide_rect()
@@ -48,11 +50,11 @@ void collide_rect()
 
 void draw_player(Canvas* canvas)
 {
-    int array_size = sizeof(players) / sizeof(players[0]);
+    int array_size = sizeof(player) / sizeof(player[0]);
     for(int i = 0; i < array_size; i++)
     {
-        int x = players[i][0];
-        int y = players[i][1];
+        int x = player[i][0];
+        int y = player[i][1];
         if(x != 0 && y != 0)
         {
             canvas_draw_dot(canvas, x + player_x, y + player_y);
@@ -77,6 +79,51 @@ void draw_jellyfish(Canvas* canvas)
     }
 }
 
+void draw_mini_map(Canvas* canvas)
+{
+    // Draw boarder
+    canvas_draw_line(canvas, 8, 8, 120, 8);
+    canvas_draw_line(canvas, 8, 8, 8, 56);
+    canvas_draw_line(canvas, 120, 8, 120, 56);
+    canvas_draw_line(canvas, 8, 56, 120, 56);
+
+    // Draw maze
+    canvas_draw_line(canvas, 20, 18, 108, 18);
+    canvas_draw_line(canvas, 20, 28, 108, 28);
+    canvas_draw_line(canvas, 20, 38, 108, 38);
+    canvas_draw_line(canvas, 20, 48, 108, 48);
+
+    // Draw snacks (dots)
+    for (int i = 12; i < 120; i += 4)
+    {
+        canvas_draw_dot(canvas, i, 12);
+        canvas_draw_dot(canvas, i, 22);
+        canvas_draw_dot(canvas, i, 32);
+        canvas_draw_dot(canvas, i, 42);
+        canvas_draw_dot(canvas, i, 52);
+    }
+
+    canvas_draw_dot(canvas, 12, 18);
+    canvas_draw_dot(canvas, 12, 28);
+    canvas_draw_dot(canvas, 12, 38);
+    canvas_draw_dot(canvas, 12, 48);
+
+    canvas_draw_dot(canvas, 16, 18);
+    canvas_draw_dot(canvas, 16, 28);
+    canvas_draw_dot(canvas, 16, 38);
+    canvas_draw_dot(canvas, 16, 48);
+
+    canvas_draw_dot(canvas, 112, 18);
+    canvas_draw_dot(canvas, 112, 28);
+    canvas_draw_dot(canvas, 112, 38);
+    canvas_draw_dot(canvas, 112, 48);
+    
+    canvas_draw_dot(canvas, 116, 18);
+    canvas_draw_dot(canvas, 116, 28);
+    canvas_draw_dot(canvas, 116, 38);
+    canvas_draw_dot(canvas, 116, 48);
+}
+
 static void input_callback(InputEvent* event, void* context)
 {
     FuriMessageQueue* queue = (FuriMessageQueue*)context;
@@ -86,15 +133,34 @@ static void input_callback(InputEvent* event, void* context)
         {
             moving_right = false;
             moving_left = true;
+            moving_up = false;
+            moving_down = false;
         }
 
         if (event->key == InputKeyRight)
         {
             moving_right = true;
             moving_left = false;
+            moving_up = false;
+            moving_down = false;
+        }
+
+        if (event->key == InputKeyUp)
+        {
+            moving_right = false;
+            moving_left = false;
+            moving_up = true;
+            moving_down = false;
+        }
+
+        if (event->key == InputKeyDown)
+        {
+            moving_right = false;
+            moving_left = false;
+            moving_up = false;
+            moving_down = true;
         }
     }
-    
     
     furi_message_queue_put(queue, event, FuriWaitForever);
 }
@@ -107,16 +173,29 @@ static void draw_callback(Canvas* canvas, void* context)
     collide_rect();
     draw_player(canvas);
     draw_jellyfish(canvas);
+    draw_mini_map(canvas);
 
     
-    if (moving_right && player_x < 114)
+    if (moving_right && player_x < 108 && player_y % 5 == 0)
     {
-        player_x += 4;
+        player_x += 2;
     }
 
-    if (moving_left && player_x > 6)
+    if (moving_left && player_x > 8 && player_y % 5 == 0)
     {
-        player_x -= 4;
+        player_x -= 2;
+    }
+
+    if (moving_up && player_y > 8 && (player_x == 8 || player_x == 108))
+    {
+        player_y -= 5;
+        moving_up = false;
+    }
+
+    if (moving_down && player_y < 52 && (player_x == 8 || player_x == 108))
+    {
+        player_y += 5;
+        moving_down = false;
     }
 
     snprintf(score_str, sizeof(score_str), "%d", SCORE);
