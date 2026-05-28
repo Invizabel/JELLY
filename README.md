@@ -1,1 +1,1 @@
-Jelly is a fast paced pong game!
+Jelly Blasters is a fast paced maze game!
