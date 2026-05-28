@@ -121,7 +121,7 @@ void draw_mini_map(Canvas* canvas)
     // Line 7
     canvas_draw_line(canvas, 32, 16, 32, 24);
     // Line 8
-    canvas_draw_line(canvas, 24, 40, 32, 40);
+    canvas_draw_line(canvas, 16, 48, 24, 48);
     // Line 9
     canvas_draw_line(canvas, 32, 40, 32, 48);
     // Line 10
