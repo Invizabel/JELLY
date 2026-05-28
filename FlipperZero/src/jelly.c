@@ -118,6 +118,28 @@ void draw_mini_map(Canvas* canvas)
     canvas_draw_line(canvas, 48, 16, 48, 24);
     // Line 14
     canvas_draw_line(canvas, 48, 40, 48, 48);
+    // Line 15
+    canvas_draw_line(canvas, 56, 16, 72, 16);
+    // Line 16
+    canvas_draw_line(canvas, 56, 48, 72, 48);
+    // Line 17
+    canvas_draw_line(canvas, 56, 24, 72, 24);
+    // Line 18
+    canvas_draw_line(canvas, 56, 40, 72, 40);
+    // Line 19
+    canvas_draw_line(canvas, 56, 24, 56, 40);
+    // Line 20
+    canvas_draw_line(canvas, 72, 24, 72, 40);
+    // Line 21
+    canvas_draw_line(canvas, 80, 24, 88, 24);
+    // Line 22
+    canvas_draw_line(canvas, 80, 40, 88, 40);
+    // Line 23
+    canvas_draw_line(canvas, 80, 16, 80, 24);
+    // Line 24
+    canvas_draw_line(canvas, 80, 40, 80, 48);
+    // Line 25
+    canvas_draw_line(canvas, 80, 32, 96, 32);
 }
 
 static void input_callback(InputEvent* event, void* context)
