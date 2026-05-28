@@ -87,41 +87,38 @@ void draw_mini_map(Canvas* canvas)
     canvas_draw_line(canvas, 120, 8, 120, 56);
     canvas_draw_line(canvas, 8, 56, 120, 56);
 
-    // Draw maze
-    canvas_draw_line(canvas, 20, 18, 108, 18);
-    canvas_draw_line(canvas, 20, 28, 108, 28);
-    canvas_draw_line(canvas, 20, 38, 108, 38);
-    canvas_draw_line(canvas, 20, 48, 108, 48);
-
-    // Draw snacks (dots)
-    for (int i = 12; i < 120; i += 4)
-    {
-        canvas_draw_dot(canvas, i, 12);
-        canvas_draw_dot(canvas, i, 22);
-        canvas_draw_dot(canvas, i, 32);
-        canvas_draw_dot(canvas, i, 42);
-        canvas_draw_dot(canvas, i, 52);
-    }
-
-    canvas_draw_dot(canvas, 12, 18);
-    canvas_draw_dot(canvas, 12, 28);
-    canvas_draw_dot(canvas, 12, 38);
-    canvas_draw_dot(canvas, 12, 48);
-
-    canvas_draw_dot(canvas, 16, 18);
-    canvas_draw_dot(canvas, 16, 28);
-    canvas_draw_dot(canvas, 16, 38);
-    canvas_draw_dot(canvas, 16, 48);
-
-    canvas_draw_dot(canvas, 112, 18);
-    canvas_draw_dot(canvas, 112, 28);
-    canvas_draw_dot(canvas, 112, 38);
-    canvas_draw_dot(canvas, 112, 48);
-    
-    canvas_draw_dot(canvas, 116, 18);
-    canvas_draw_dot(canvas, 116, 28);
-    canvas_draw_dot(canvas, 116, 38);
-    canvas_draw_dot(canvas, 116, 48);
+    // Draw mini map (maze)
+    canvas_draw_line(canvas, 16, 16, 24, 16);
+    canvas_draw_line(canvas, 8, 24, 16, 24);
+    canvas_draw_line(canvas, 16, 32, 24, 32);
+    canvas_draw_line(canvas, 8, 40, 16, 40);
+    canvas_draw_line(canvas, 16, 16, 24, 48);
+    canvas_draw_line(canvas, 32, 16, 32, 24);
+    canvas_draw_line(canvas, 24, 24, 32, 24);
+    canvas_draw_line(canvas, 24, 40, 32, 40);
+    canvas_draw_line(canvas, 32, 40, 32, 48);
+    canvas_draw_line(canvas, 32, 32, 48, 32);
+    canvas_draw_line(canvas, 40, 40, 48, 40);
+    canvas_draw_line(canvas, 48, 40, 48, 48);
+    canvas_draw_line(canvas, 56, 16, 72, 16);
+    canvas_draw_line(canvas, 56, 24, 72, 24);
+    canvas_draw_line(canvas, 56, 24, 56, 40);
+    canvas_draw_line(canvas, 72, 24, 72, 40);
+    canvas_draw_line(canvas, 56, 48, 72, 48);
+    canvas_draw_line(canvas, 80, 16, 80, 24);
+    canvas_draw_line(canvas, 80, 24, 88, 24);
+    canvas_draw_line(canvas, 80, 32, 96, 32);
+    canvas_draw_line(canvas, 80, 40, 88, 40);
+    canvas_draw_line(canvas, 80, 40, 80, 48);
+    canvas_draw_line(canvas, 96, 16, 96, 24);
+    canvas_draw_line(canvas, 96, 24, 104, 24);
+    canvas_draw_line(canvas, 96, 40, 104, 40);
+    canvas_draw_line(canvas, 96, 40, 96, 48);
+    canvas_draw_line(canvas, 104, 16, 112, 16);
+    canvas_draw_line(canvas, 104, 32, 112, 32);
+    canvas_draw_line(canvas, 104, 48, 112, 48);
+    canvas_draw_line(canvas, 112, 24, 120, 24);
+    canvas_draw_line(canvas, 112, 40, 120, 40);
 }
 
 static void input_callback(InputEvent* event, void* context)
