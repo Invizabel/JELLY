@@ -1,0 +1,12 @@
+App(
+    appid="jellyblasters",
+    name="Jelly Blasters",
+    apptype=FlipperAppType.EXTERNAL,
+    entry_point="main",
+    fap_description="Jelly Blasters is a fast paced maze game!",
+    fap_author="Invizabel",
+    fap_weburl="https://github.com/Invizabel/jelly",
+    fap_icon="assets/icon.png",
+    fap_category="Games",
+    fap_version="1.0"
+)

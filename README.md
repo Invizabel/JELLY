@@ -1,1 +1,1 @@
-## jelly is an experimental video player
+Jelly is a fast paced pong game!
