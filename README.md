@@ -1,1 +1,1 @@
-Get to the portal as fast as possible!
+Rogue-like game where you control a jellyfish bloom!
