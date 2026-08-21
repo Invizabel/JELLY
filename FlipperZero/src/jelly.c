@@ -70,15 +70,15 @@ void draw_player(Canvas * canvas)
         player_x += max_flap;
     }
     
-    int array_size = sizeof(players) / sizeof(players[0]);
+    int array_size = sizeof(player) / sizeof(player[0]);
     for (int a = 0; a < hatch_x; a++)
     {
         for (int b = 0; b < hatch_y; b++)
         {
             for (int i = 0; i < array_size; i++)
             {
-                int x = players[i][0] + (8 * a);
-                int y = players[i][1] + (8 * b);
+                int x = player[i][0] + (8 * a);
+                int y = player[i][1] + (8 * b);
                 if(x != 0 && y != 0)
                 {
                     canvas_draw_dot(canvas, x + player_x, y + player_y);
