@@ -1,1 +1,1 @@
-Jelly Blasters is a fast paced maze game!
+Get to the portal as fast as possible!
