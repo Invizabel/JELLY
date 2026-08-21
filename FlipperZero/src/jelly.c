@@ -4,275 +4,186 @@
 #include <stdlib.h>
 
 int SCORE = 0;
+int LEVEL = 1;
+int score_tracker = 0;
+
 char score_str[16];
 
-int snacks[13][5];
-bool moving_right = false;
-bool moving_left = false;
-bool moving_up = false;
-bool moving_down = false;
+int player_x = 6;
+int player_y = 28;
+int hatch_x = 1;
+int hatch_y = 1;
 
-int jellyfish_x_y[][2] = {{54,22},{62,22},{54,30},{62,30}};
+bool is_up = false;
+bool is_down = false;
+bool is_left = false;
+bool is_right = false;
 
-int player_x = 56;
-int player_y = 36;
+// Specials:
+int max_flap = 2;
 
-// Coordinates for drawing
-int jellyfish[][2] = {{3,2},{4,2},{5,2},{6,2},{7,2},{8,2},{2,3},{9,3},{2,4},{9,4},{3,5},{4,5},{5,5},{6,5},{7,5},{8,5},{3,6},{6,6},{8,6},{4,7},{6,7},{9,7},{2,8},{4,8},{7,8},{3,9}};
-int player[][2] = {{7,4},{8,4},{3,5},{4,5},{6,5},{9,5},{3,6},{5,6},{10,6},{3,7},{5,7},{10,7},{3,8},{4,8},{6,8},{9,8},{7,9},{8,9}};
-int mini_map[13][29] = {{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-                    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                    {1,0,1,1,1,0,1,0,0,0,1,0,1,1,1,1,1,0,1,0,0,0,1,0,1,1,1,0,1},
-                    {1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1},
-                    {1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1},
-                    {1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1},
-                    {1,0,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,0,1},
-                    {1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1},
-                    {1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1},
-                    {1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1},
-                    {1,0,1,1,1,0,1,0,0,0,1,0,1,1,1,1,1,0,1,0,0,0,1,0,1,1,1,0,1},
-                    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}};
-
-bool is_wall(int x, int y)
-{
-    return mini_map[y / 4][x / 4] == 1;
-}
+// Sprite coordinates for drawing
+int player[][2] = {{3,2},{4,2},{5,2},{6,2},{7,2},{8,2},{2,3},{9,3},{2,4},{9,4},{3,5},{4,5},{5,5},{6,5},{7,5},{8,5},{3,6},{6,6},{8,6},{4,7},{6,7},{9,7},{2,8},{4,8},{7,8},{3,9}};
+int portal[][2] = {{6, 2}, {7, 2}, {8, 2}, {9, 2}, {10, 2}, {11, 2}, {12, 2}, {13, 2}, {5, 3}, {6, 3}, {7, 3}, {8, 3}, {9, 3}, {10, 3}, {11, 3}, {12, 3}, {13, 3},{14, 3}, {4, 4}, {5, 4}, {6, 4}, {13, 4}, {14, 4}, {15, 4}, {3, 5}, {4, 5}, {5, 5}, {14, 5}, {15, 5}, {16, 5}, {2, 6}, {3, 6}, {4, 6}, {15, 6}, {16, 6}, {17, 6}, {2, 7}, {3, 7}, {16, 7}, {17, 7}, {2, 8}, {3, 8}, {16, 8}, {17, 8}, {2, 9}, {3, 9}, {16, 9}, {17, 9}, {2, 10}, {3, 10}, {16, 10}, {17, 10}, {2, 11}, {3, 11}, {16, 11}, {17, 11}, {2, 12}, {3, 12}, {16, 12}, {17, 12}, {2, 13}, {3, 13}, {16, 13}, {17, 13}, {2, 14}, {3, 14}, {16, 14}, {17, 14}, {2, 15}, {3, 15}, {16, 15}, {17, 15}, {2, 16}, {3, 16}, {16, 16}, {17, 16}, {2, 17}, {3, 17}, {16, 17}, {17, 17}, {2, 18}, {3, 18}, {16, 18}, {17, 18}, {2, 19}, {3, 19}, {16, 19}, {17, 19}, {2, 20}, {3, 20}, {16, 20}, {17, 20}, {2, 21}, {3, 21}, {16, 21}, {17, 21}, {2, 22}, {3, 22}, {16, 22}, {17, 22}, {2, 23}, {3, 23}, {16, 23}, {17, 23}, {2, 24}, {3, 24}, {16, 24}, {17, 24}, {2, 25}, {3, 25}, {16, 25}, {17, 25}, {2, 26}, {3, 26}, {16, 26}, {17, 26}, {2, 27}, {3, 27}, {16, 27}, {17, 27}, {2, 28}, {3, 28}, {16, 28}, {17, 28}, {2, 29}, {3, 29}, {4, 29}, {15, 29}, {16, 29}, {17, 29}, {3, 30}, {4, 30}, {5, 30}, {14, 30}, {15, 30}, {16, 30}, {4, 31}, {5, 31}, {6, 31}, {13, 31}, {14, 31}, {15, 31}, {5, 32}, {6, 32}, {7, 32}, {8, 32}, {9, 32}, {10, 32}, {11, 32}, {12, 32}, {13, 32}, {14, 32}, {6, 33}, {7, 33}, {8, 33}, {9, 33}, {10, 33}, {11, 33}, {12, 33}, {13, 33}};
 
 void collide_rect()
 {
-    
-    int player_left = player_x;
-    int player_top = player_y - 1;
-    int player_right = player_x + 8;
-    int player_bottom = player_y + 10;
-
-    for (int i = 0; i < 4; i++)
-    {
-        int jellyfish_left = jellyfish_x_y[i][0];
-        int jellyfish_top = jellyfish_x_y[i][1] - 1;
-        int jellyfish_right = jellyfish_x_y[i][0] + 8;
-        int jellyfish_bottom = jellyfish_x_y[i][1] + 10;
-
-        bool jellyfish_collision = player_left <= jellyfish_right && player_right >= jellyfish_left && player_top <= jellyfish_bottom && player_bottom >= jellyfish_top;
-
-        if (jellyfish_collision)
-        {
-            SCORE = 0;
-            // pass for now
-        }
-    }
+    //int player_left = player_x;
+    //int player_top = player_y - 1;
+    //int player_right = player_x + 8;
+    //int player_bottom = player_y + 7;
 }
 
-void draw_player(Canvas* canvas)
+void draw_portal(Canvas * canvas)
 {
-    int array_size = sizeof(player) / sizeof(player[0]);
-    for(int i = 0; i < array_size; i++)
+    int array_size = sizeof(portal) / sizeof(portal[0]);
+    for (int i = 0; i < array_size; i++)
     {
-        int x = player[i][0];
-        int y = player[i][1];
+        int x = portal[i][0];
+        int y = portal[i][1];
         if(x != 0 && y != 0)
         {
-            canvas_draw_dot(canvas, x + player_x, y + player_y);
+            canvas_draw_dot(canvas, x + 104, y + 16);
         }
     }
 }
 
-void draw_jellyfish(Canvas* canvas)
-{   
-    int array_size = sizeof(jellyfish) / sizeof(jellyfish[0]);
-    for (int i = 0; i < 4; i++)
+void draw_player(Canvas * canvas)
+{
+    if (is_up)
     {
-        for(int j = 0; j < array_size;j++)
+        player_y -= max_flap;
+    }
+    
+    else if (is_down)
+    {
+        player_y += max_flap;
+    }
+
+    else if (is_left)
+    {
+        player_x -= max_flap;
+    }
+
+    else if (is_right)
+    {
+        player_x += max_flap;
+    }
+    
+    int array_size = sizeof(players) / sizeof(players[0]);
+    for (int a = 0; a < hatch_x; a++)
+    {
+        for (int b = 0; b < hatch_y; b++)
         {
-            int x = jellyfish[j][0];
-            int y = jellyfish[j][1];
-            if(x != 0 && y != 0)
+            for (int i = 0; i < array_size; i++)
             {
-                canvas_draw_dot(canvas, x + jellyfish_x_y[i][0], y + jellyfish_x_y[i][1]);
+                int x = players[i][0] + (8 * a);
+                int y = players[i][1] + (8 * b);
+                if(x != 0 && y != 0)
+                {
+                    canvas_draw_dot(canvas, x + player_x, y + player_y);
+                }
             }
         }
     }
 }
 
-void draw_mini_map(Canvas* canvas)
-{
-    // Draw boarder
-    canvas_draw_line(canvas, 8, 8, 120, 8);
-    canvas_draw_line(canvas, 8, 8, 8, 56);
-    canvas_draw_line(canvas, 120, 8, 120, 56);
-    canvas_draw_line(canvas, 8, 56, 120, 56);
-
-    // Draw mini map (maze)
-    // 34 Lines total
-    
-    // Line 1
-    canvas_draw_line(canvas, 16, 16, 24, 16);
-    // Line 2
-    canvas_draw_line(canvas, 8, 24, 16, 24);
-    // Line 3
-    canvas_draw_line(canvas, 16, 32, 24, 32);
-    // Line 4
-    canvas_draw_line(canvas, 8, 40, 16, 40);
-    // Line 5
-    canvas_draw_line(canvas, 24, 40, 32, 40);
-    // Line 6
-    canvas_draw_line(canvas, 24, 24, 32, 24);
-    // Line 7
-    canvas_draw_line(canvas, 32, 16, 32, 24);
-    // Line 8
-    canvas_draw_line(canvas, 16, 48, 24, 48);
-    // Line 9
-    canvas_draw_line(canvas, 32, 40, 32, 48);
-    // Line 10
-    canvas_draw_line(canvas, 32, 32, 48, 32);
-    // Line 11
-    canvas_draw_line(canvas, 40, 24, 48, 24);
-    // Line 12
-    canvas_draw_line(canvas, 40, 40, 48, 40);
-    // Line 13
-    canvas_draw_line(canvas, 48, 16, 48, 24);
-    // Line 14
-    canvas_draw_line(canvas, 48, 40, 48, 48);
-    // Line 15
-    canvas_draw_line(canvas, 56, 16, 72, 16);
-    // Line 16
-    canvas_draw_line(canvas, 56, 48, 72, 48);
-    // Line 17
-    canvas_draw_line(canvas, 56, 24, 72, 24);
-    // Line 18
-    canvas_draw_line(canvas, 56, 40, 72, 40);
-    // Line 19
-    canvas_draw_line(canvas, 56, 24, 56, 40);
-    // Line 20
-    canvas_draw_line(canvas, 72, 24, 72, 40);
-    // Line 21
-    canvas_draw_line(canvas, 80, 24, 88, 24);
-    // Line 22
-    canvas_draw_line(canvas, 80, 40, 88, 40);
-    // Line 23
-    canvas_draw_line(canvas, 80, 16, 80, 24);
-    // Line 24
-    canvas_draw_line(canvas, 80, 40, 80, 48);
-    // Line 25
-    canvas_draw_line(canvas, 80, 32, 96, 32);
-    // Line 26
-    canvas_draw_line(canvas, 96, 24, 104, 24);
-    // Line 27
-    canvas_draw_line(canvas, 96, 40, 104, 40);
-    // Line 28
-    canvas_draw_line(canvas, 96, 16, 96, 24);
-    // Line 29
-    canvas_draw_line(canvas, 96, 40, 96, 48);
-    // Line 30
-    canvas_draw_line(canvas, 104, 16, 112, 16);
-    // Line 31
-    canvas_draw_line(canvas, 104, 32, 112, 32);
-    // Line 32
-    canvas_draw_line(canvas, 104, 48, 112, 48);
-    // Line 33
-    canvas_draw_line(canvas, 112, 24, 120, 24);
-    // Line 34
-    canvas_draw_line(canvas, 112, 40, 120, 40);
-}
-
-static void input_callback(InputEvent* event, void* context)
-{
-    FuriMessageQueue* queue = (FuriMessageQueue*)context;
-    if(event->type == InputTypeShort || event->type == InputTypeRepeat || event->type == InputTypePress)
-    {
-        if (event->key == InputKeyLeft)
-        {
-            moving_right = false;
-            moving_left = true;
-            moving_up = false;
-            moving_down = false;
-        }
-
-        if (event->key == InputKeyRight)
-        {
-            moving_right = true;
-            moving_left = false;
-            moving_up = false;
-            moving_down = false;
-        }
-
-        if (event->key == InputKeyUp)
-        {
-            moving_right = false;
-            moving_left = false;
-            moving_up = true;
-            moving_down = false;
-        }
-
-        if (event->key == InputKeyDown)
-        {
-            moving_right = false;
-            moving_left = false;
-            moving_up = false;
-            moving_down = true;
-        }
-    }
-    
-    furi_message_queue_put(queue, event, FuriWaitForever);
-}
-
-
-static void draw_callback(Canvas* canvas, void* context)
+static void draw_callback(Canvas * canvas, void * context)
 {
     UNUSED(context);
     canvas_clear(canvas);
+    furi_delay_us(40000);
+    
+    score_tracker += 1;
+    // Increment score every 1 second
+    if (score_tracker == 25)
+    {
+        SCORE += 1;
+        score_tracker = 0;
+
+        if (SCORE % 2 == 0 && hatch_y + 1 <= 3)
+        {
+            hatch_y += 1;
+        }
+        else if (hatch_x + 1 <= 3)
+        {
+            hatch_x += 1;
+        }
+    }
+    
     collide_rect();
     draw_player(canvas);
-    draw_jellyfish(canvas);
-    draw_mini_map(canvas);
-
-    
-    if (moving_right && player_x <= 120 && !is_wall(player_x + 2, player_y))
-    {
-        player_x += 2;
-    }
-
-    if (moving_left && player_x >= 8 && !is_wall(player_x - 2, player_y))
-    {
-        player_x -= 2;
-    }
-
-    if (moving_up && player_y >= 8 && !is_wall(player_x, player_y - 2))
-    {
-        player_y -= 2;
-    }
-
-    if (moving_down && player_y <= 56 && !is_wall(player_x, player_y + 2))
-    {
-        player_y += 2;
-    }
+    draw_portal(canvas);
 
     snprintf(score_str, sizeof(score_str), "%d", SCORE);
-    canvas_draw_str(canvas,2,8,score_str);
+    canvas_draw_str(canvas, 2, 8, score_str);
 
     canvas_commit(canvas);
 }
 
-int main()
+static void input_callback(InputEvent * event, void * context)
 {
-    for (int i = 0; i < 13; i++)
+    FuriMessageQueue * queue = (FuriMessageQueue *)context;
+    if(event->type == InputTypeShort || event->type == InputTypeRepeat || event->type == InputTypePress)
     {
-        for (int j = 0; j < 5; j++)
+        if (event->key == InputKeyUp)
         {
-            snacks[i][j] = 1;
+            is_up = true;
+        }
+
+        else if (event->key == InputKeyDown)
+        {
+            is_down = true;
+        }
+
+        else if (event->key == InputKeyLeft)
+        {
+            is_left = true;
+        }
+
+        else if (event->key == InputKeyRight)
+        {
+            is_right = true;
         }
     }
 
-    FuriMessageQueue* queue = furi_message_queue_alloc(8, sizeof(InputEvent));
-    ViewPort* view_port = view_port_alloc();
+    if(event->type == InputTypeRelease)
+    {
+        if (event->key == InputKeyUp)
+        {
+            is_up = false;
+        }
+        
+        else if (event->key == InputKeyDown)
+        {
+            is_down = false;
+        }
+
+        else if (event->key == InputKeyLeft)
+        {
+            is_left = false;
+        }
+
+        else if (event->key == InputKeyRight)
+        {
+            is_right = false;
+        }
+    }
+
+    furi_message_queue_put(queue, event, FuriWaitForever);
+}
+
+int main()
+{
+    FuriMessageQueue * queue = furi_message_queue_alloc(8, sizeof(InputEvent));
+    ViewPort * view_port = view_port_alloc();
     view_port_draw_callback_set(view_port, draw_callback, NULL);
     view_port_input_callback_set(view_port, input_callback, queue);
-    Gui* gui = (Gui*)furi_record_open("gui");
+    Gui* gui = (Gui *)furi_record_open("gui");
     gui_add_view_port(gui, view_port, GuiLayerFullscreen);
     dolphin_deed(DolphinDeedPluginGameStart);
+    
     InputEvent event;
-
     bool running = true;
     while(running)
     {
@@ -291,5 +202,6 @@ int main()
     gui_remove_view_port(gui, view_port);
     view_port_free(view_port);
     furi_record_close(RECORD_GUI);
+    
     return 0;
 }
