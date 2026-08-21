@@ -4,9 +4,9 @@ sourcecode:
     origin: https://github.com/Invizabel/jelly
     commit_sha: ecc4c7e35b6f94150d9c1df582799975e3bdcfe2
     subdir: FlipperZero
-short_description: "Jelly Blasters is a fast paced maze game!"
+short_description: "Rogue-like game where you control a jellyfish bloom!"
 changelog: "@./docs/changelog.md"
-description: "Jelly Blasters is a fast paced maze game!"
+description: "Rogue-like game where you control a jellyfish bloom!"
 source_file:
   - src/main.c
 screenshots:
