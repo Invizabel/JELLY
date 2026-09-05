@@ -1,1 +1,1 @@
-Rogue-like game where you control a jellyfish bloom!
+Jelly Blasters is a fast paced maze game!

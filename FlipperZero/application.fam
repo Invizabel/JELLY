@@ -3,7 +3,7 @@ App(
     name="Jelly Blasters",
     apptype=FlipperAppType.EXTERNAL,
     entry_point="main",
-    fap_description="Rogue-like game where you control a jellyfish bloom!",
+    fap_description="Jelly Blasters is a fast paced maze game!",
     fap_author="Invizabel",
     fap_weburl="https://github.com/Invizabel/jelly",
     fap_icon="assets/icon.png",
