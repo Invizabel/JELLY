@@ -1,6 +1,6 @@
 from PIL import Image
 
-img = Image.open("kelp.png").convert("RGBA")
+img = Image.open("fish_left.png").convert("RGBA")
 
 pixels = img.load()
 
